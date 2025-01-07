@@ -1,0 +1,25 @@
+{
+	"header": "Quiz 2",
+	"questions":[
+		{
+			"type": "MC",
+			"question": "What is the most popular OCR library in python?",
+			"answer": "pytesseract"
+		},
+		{
+			"type": "MC",
+			"question": "What is the most popular image manipulation library in python?",
+			"answer": "pillow"
+		},
+		{
+			"type": "MC",
+			"question": "Which of below library can open RTSP stream in python?",
+			"answer": "opencv"
+		},
+		{
+			"type": "OE",
+			"question": "Describe what is image segmentation?"
+		}
+	]
+
+}

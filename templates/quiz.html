@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block score %}
+    <p id="best-score">Score 0</p>
+{% endblock score %}
+{% block header %}
+    <h2>{{quiz.content.header}}</h2>
+    <div>
+        <p id="score">Score 0</p>
+    </div>
+
+{% endblock header %}
+{% block content %}
+{% for question in quiz.content.questions %}
+<div>
+    <p id="{{loop.index0}}-question">{{question.question}}</p>
+    {% if question.type == 'MC' %}
+    <select id="{{loop.index0}}-answer">
+        <option id="{{loop.index0}}-options1" value="{{question.options[0]}}">{{question.options[0]}}</option>
+        <option id="{{loop.index0}}-options2" value="{{question.options[1]}}">{{question.options[1]}}</option>
+        <option id="{{loop.index0}}-options3" value="{{question.options[2]}}">{{question.options[2]}}</option>
+        <option id="{{loop.index0}}-options4" value="{{question.options[3]}}">{{question.options[3]}}</option>
+    </select>
+    {% endif %}
+    {% if question.type == 'OE' %}
+    <textarea id="{{loop.index0}}-input" type="text" placeholder="Answer"></textarea>
+    {% endif %}
+</div>
+{% endfor %}
+<button id="send">Calculate</button>
+<script type="text/javascript">
+    async function calculate(ev){
+        ev.preventDefault();
+        const data = {{quiz|safe}}
+        const result = data.result
+        let score = 0
+        for(let i=0;i<result.questions.length; i++){
+            if (result.questions[i].type === "MC"){
+                const answer = document.getElementById(`${i}-answer`).value;
+                if(answer === result.questions[i].answer){
+                    score += 10
+                }
+            }else{
+                const answer = document.getElementById(`${i}-input`).value;
+                if(answer){
+                    score += 20
+                }
+            }
+        }
+        document.getElementById("score").innerHTML = `Score: ${score}`
+        try{
+            await fetch("http://localhost:8080/api/scores", {
+            method: "POST",
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                quiz_id: data.id,
+                result: score
+            })
+        })
+        await getMax()
+        }catch(err){
+            console.error(err)
+        }
+
+    }
+    const btn = document.getElementById("send");
+    btn.onclick = calculate;
+    async function getMax(){
+        const maxScore = await fetch("http://localhost:8080/api/scores/max")
+        if(maxScore.status !== 200){
+            document.getElementById("best-score").innerHTML = `Best Score: 0`
+        }else{
+            const jsData = await maxScore.json();
+            document.getElementById("best-score").innerHTML = `Best Score: ${jsData.result}`
+        }
+    }
+    getMax()
+    
+</script>
+{% endblock content %}

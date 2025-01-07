@@ -1,0 +1,25 @@
+{
+	"header": "Quiz 1",
+	"questions":[
+		{
+			"type": "MC",
+			"question": "What is the most popular ML library in python?",
+			"answer": "tensorflow"
+		},
+		{
+			"type": "MC",
+			"question": "What is the most popular Matrix manipulation library in python?",
+			"answer": "numpy"
+		},
+		{
+			"type": "MC",
+			"question": "Which of below is data visualization library in python?",
+			"answer": "matplotlib"
+		},
+		{
+			"type": "OE",
+			"question": "Describe what is data pipeline?"
+		}
+	]
+
+}
